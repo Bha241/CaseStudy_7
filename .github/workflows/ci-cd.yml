@@ -42,19 +42,17 @@ jobs:
           if [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
           fi
-      
-          python -m pip install pytest
-      
-            - name: Run Unit Tests
-              env:
-                PYTHONPATH: ${{ github.workspace }}
-            
-              run: |
-                if [ -d tests ]; then
-                  python -m pytest tests/ -v
-                else
+      - name: Run Unit Tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+              if [ -d tests ]; then
+                python -m pytest tests/ -v
+              else
                   echo "No tests found."
-                fi
+              fi
+              python -m pip install pytest
+
   docker-build:
     name: Build Docker Image
     needs: test
