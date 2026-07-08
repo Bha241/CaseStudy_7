@@ -48,13 +48,13 @@ jobs:
       - name: Run Unit Tests
         env:
           PYTHONPATH: ${{ github.workspace }}
+      
         run: |
           if [ -d tests ]; then
-            pytest tests/
+            python -m pytest tests/ -v
           else
             echo "No tests found."
           fi
-
   docker-build:
     name: Build Docker Image
     needs: test
