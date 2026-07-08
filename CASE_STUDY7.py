@@ -666,19 +666,28 @@ cleaned_data.show(5)
 
 #Step 3: TRANSFORM - Feature Engineering (Time Attributes & Derived Metrics)
 
-from pyspark.sql.functions import hour, dayofmonth, month, year, date_format
+from pyspark.sql.functions import col,hour, dayofmonth, month, year, date_format
 
 def enrich_data(cleaned_df):
-    """Add time-based features and total/derived consumption metrics."""
-    enriched = cleaned_df.withColumn("Hour", hour("Datetime")) \
-        .withColumn("Day", dayofmonth("Datetime")) \
-        .withColumn("Month", month("Datetime")) \
-        .withColumn("Year", year("Datetime")) \
-        .withColumn("MonthName", date_format("Datetime", "MMMM")) \
+    enriched = (
+        cleaned_df
+        .withColumn("Hour", hour("Datetime"))
+        .withColumn("Day", dayofmonth("Datetime"))
+        .withColumn("Month", month("Datetime"))
+        .withColumn("Year", year("Datetime"))
+        .withColumn("MonthName", date_format("Datetime", "MMMM"))
+        .withColumn(
+            "Consumption_Difference",
+            col("PowerConsumption_Zone1") - col("PowerConsumption_Zone2")
+        )
         .withColumn(
             "Total_Consumption",
-            col("PowerConsumption_Zone1") + col("PowerConsumption_Zone2") + col("PowerConsumption_Zone3")
+            col("PowerConsumption_Zone1")
+            + col("PowerConsumption_Zone2")
+            + col("PowerConsumption_Zone3")
         )
+    )
+
     return enriched
 
 enriched_data = enrich_data(cleaned_data)
