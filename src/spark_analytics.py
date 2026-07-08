@@ -176,15 +176,18 @@ def run_dataframe_operations(df):
     print("Filter Temp > 30 and Humidity < 50 count:", df.filter((df.Temperature > 30) & (df.Humidity < 50)).count())
     
     # Step 7 & 8: Create new columns
-    df_with_diff = df.withColumn("Consumption_Difference", col("Zone1") - col("PowerConsumption_Zone2"))
-    df_with_diff.select("Zone1", "PowerConsumption_Zone2", "Consumption_Difference").show(5)
-    
-    df_all_cols = df.withColumn(
-        "Total_Consumption",
-        col("Zone1") + col("PowerConsumption_Zone2") + col("PowerConsumption_Zone3")
+    df_all_cols = (
+        df.withColumn(
+            "Consumption_Difference",
+            col("Zone1") - col("PowerConsumption_Zone2")
+        )
+        .withColumn(
+            "Total_Consumption",
+            col("Zone1")
+            + col("PowerConsumption_Zone2")
+            + col("PowerConsumption_Zone3")
+        )
     )
-    df_all_cols.select("Zone1", "PowerConsumption_Zone2", "PowerConsumption_Zone3", "Total_Consumption").show(5)
-    
     # Step 9: Sort by Temperature descending
     df.orderBy(df.Temperature.desc()).show(5)
     
