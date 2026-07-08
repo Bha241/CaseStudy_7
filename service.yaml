@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: education-analytics-service
+  labels:
+    app: education-analytics
+spec:
+  type: ClusterIP
+  selector:
+    app: education-analytics
+  ports:
+    - port: 80
+      targetPort: 8000
+      name: api-port
