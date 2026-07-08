@@ -218,11 +218,17 @@ def run_spark_sql_queries(spark, df):
     print("\n--- Q5: Exploratory Data Analysis & Spark SQL ---")
     
     # Enrich the dataframe with date/time features
-    df_enriched = df.withColumn("Hour", hour("Datetime")) \
-                    .withColumn("Day", dayofmonth("Datetime")) \
-                    .withColumn("Month", month("Datetime")) \
-                    .withColumn("Year", year("Datetime")) \
-                    .withColumn("MonthName", date_format("Datetime", "MMMM"))
+    df_enriched = (
+        df.withColumn("Hour", hour("Datetime"))
+          .withColumn("Day", dayofmonth("Datetime"))
+          .withColumn("Month", month("Datetime"))
+          .withColumn("Year", year("Datetime"))
+          .withColumn("MonthName", date_format("Datetime", "MMMM"))
+          .withColumn(
+              "Consumption_Difference",
+              col("Zone1") - col("PowerConsumption_Zone2")
+          )
+)
                     
     # Consumer Category Classification
     low_thresh, high_thresh = df_enriched.approxQuantile("Total_Consumption", [0.33, 0.66], 0.01)
