@@ -57,8 +57,9 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Dry Run Kubernetes Manifests
+    - uses: helm/kind-action@v1
+
+    - name: Deploy
       run: |
-        # Validate syntax of deployment and service manifests
-        kubectl apply --dry-run=client -f k8s/deployment.yaml
-        kubectl apply --dry-run=client -f k8s/service.yaml
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
