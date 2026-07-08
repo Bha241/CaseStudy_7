@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: energy-analytics-deployment
+  labels:
+    app: energy-analytics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energy-analytics
+  template:
+    metadata:
+      labels:
+        app: energy-analytics
+    spec:
+      containers:
+      - name: energy-analytics-container
+        image: energy-analytics:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: api-port
+        env:
+        - name: PYTHONPATH
+          value: "/app"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
